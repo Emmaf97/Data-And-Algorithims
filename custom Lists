@@ -1,0 +1,250 @@
+/*
+ * This Project allows the user to add a new TouristAttraction to the custom ADT(theLinkedList),delete, update
+ * and search the ADT for data. The project was created using custom ADT as to understand how linked lists worked
+ * the in line comments below will explain the approach i took to create this project.
+ * I felt by doing this project i have a better idea of how a linked list works and how useful it would be to implement */
+import javax.swing.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public  class DoubleLinkedList {
+
+    // i made theLinkedList static so it would refer to one adt object at a time as this is an inner class and handle most of the list methods
+    List<TouristAttraction> T1 = new ArrayList<>(); // Arraylist to store touristattractions
+    private String filepath = "TouristAttraction.txt"; // name of textfile when its created
+    static DoubleLinkedList theLinkedList = new DoubleLinkedList();  // custom linked list
+    private Scanner input; // to take user input from console
+    TouristAttraction firstLink; // last link added  to the list
+    TouristAttraction lastLink; //  first link added to the list
+
+
+
+    // adding a tourist attraction to the start of the linked list
+    public void insertInFirstPosition(String touristAttractionName, String touristAttractionDescription, String openingTimes, int totalCost) {
+// making a new TouristAttraction object and passing the ADT data into it
+        TouristAttraction theNewAtrractionLink = new TouristAttraction(touristAttractionName, touristAttractionDescription, openingTimes, totalCost);
+// this method checks to see if there is anything in the list
+        if (isEmpty()) {
+            lastLink = theNewAtrractionLink;
+        } else {
+            firstLink.previous = theNewAtrractionLink;
+        }
+        theNewAtrractionLink.next = firstLink;
+        firstLink = theNewAtrractionLink;
+    }
+
+    public boolean isEmpty() {
+        return (firstLink == null);
+    }
+
+    public DoubleLinkedList() {
+        input = new Scanner(System.in); // // creating the new scanner as input
+    }
+
+    public static void main(String[] args) {
+        DoubleLinkedList app = new DoubleLinkedList();
+        app.run(); // creating an empty linked list and running the menu app upon start up of the programme
+    }
+
+    private int mainMenu() {
+        // main menu and its labels that will display in the console
+        System.out.println("Tourist Attraction app");
+        System.out.println(" | 1)Add an Attraction                     |");
+        System.out.println(" | 2)Save to csv file                      |");
+        System.out.println(" | 3)List recently added Attractions        |");
+        System.out.println(" | 4)Delete an Attraction                   |");
+        System.out.println(" | 5)List Attractions by cost               |");
+        System.out.println(" | 6)Search Attractions                     |");
+        System.out.println(" | 7)List Attractions Alphabetically        |");
+        System.out.println(" | 8)update Attraction                      |");
+        System.out.println(" | --------------------------------         |");
+        System.out.println("  0) Exit");
+        System.out.print("==>>");
+        int option = input.nextInt();
+        return option;
+        // integers used to get output
+    }
+
+
+    private void run()  // method that will run the menu and the options that are chosen
+    {
+        int option = mainMenu();
+        while (option != 0) {
+            switch (option) {
+                case 1:
+                    addAttraction();//addmovie
+                    break;
+                case 2:
+
+                    saveFile(T1,filepath); // saving the touristattractions to a csv file
+                    break;
+                case 3:
+                    theLinkedList.display();// displaying the current linked list
+                    break;
+                case 4:
+                    theLinkedList.removeAttraction(); //removing a trouristattraction from the linked list
+                    break;
+                case 5:
+                    bubbleSort(T1,new AttractionCostComparator()); //bubble sorting the arraylist of toursistattractions so as to be able to use the comparator for cost
+                    for(TouristAttraction T : T1) { // uses a for loop to cycle through all the list and display them with text below
+                        System.out.println("TouristAttractionName: "+T.TouristAttractionName+", TouristAttraction Description: "+T.TouristAttractionDescription+", OpeningTimes: "+T.OpeningTimes+" TotalCost: "+T.TotalCost);
+
+                    }
+                    break;
+                case 6:
+                    theLinkedList.searchAttraction(); // method to search for an attraction
+                    break;
+                case 7:
+                    bubbleSort(T1,new AttractionNameComparator()); // bubble sorting the list to get the first name by alphabetical order with the parameter of the desired comparator
+                    for(TouristAttraction T : T1) { // similar to cost for loop this one also cycles through the list and prints it with the text below
+                        System.out.println("TouristAttractionName: "+T.TouristAttractionName+", TouristAttraction Description: "+T.TouristAttractionDescription+", OpeningTimes: "+T.OpeningTimes+" TotalCost: "+T.TotalCost);
+
+                    }
+                    break;
+                case 8:
+                    theLinkedList.update();
+                    break;
+                default:
+                    System.out.println("Invalid option selected.");
+                    break;
+            }
+            System.out.println("");
+            option = mainMenu();
+        }
+    }
+    public static <T> void bubbleSort(List<T> a, Comparator<T> c ){ // bubble sort to filter out the touristattractions to their correct positions based upon the comaparator chosen e.g. cost or name
+        for(int b=1;b<a.size();b++){
+            for(int i=0;i<a.size()-b;i++)
+                if( c.compare(a.get(i),a.get(i+1))>0 ) {
+                    T swap=a.get(i);
+                    a.set(i,a.get(i+1));
+                    a.set(i+1,swap);
+                }
+        }
+    }
+    public void addAttraction() {
+        System.out.print("Enter Attraction Name: ");
+        String TouristAttractionName = input.nextLine();
+        TouristAttractionName = input.nextLine();
+
+        System.out.print("Enter Description: ");
+        String TouristAttractionDescription = input.nextLine();
+
+        System.out.print("Enter openingTimes: ");
+        String openingTimes = input.nextLine();
+
+        System.out.print("Enter TotalCost: ");
+        int Totalcost = input.nextInt();
+        //Totalcost = input.nextInt();
+
+        theLinkedList.insertInFirstPosition(TouristAttractionName, TouristAttractionDescription, openingTimes, Totalcost); //adding to the linkedlist
+
+        T1.add(new TouristAttraction(TouristAttractionName,TouristAttractionDescription,openingTimes,Totalcost)); // adding to the arraylist
+
+    }
+
+    public void searchAttraction() {
+        System.out.print("Enter Attraction Name: ");
+        String touristAttractionName = input.nextLine();
+
+        TouristAttraction theLink = firstLink;
+        if (!isEmpty()) {
+            while (!theLink.TouristAttractionName.equals(touristAttractionName)) {
+                if (theLink.next == null) {
+                    isEmpty();
+                } else {
+                    theLink = theLink.next;
+                }
+                if (!touristAttractionName.equals(theLink)) {
+                    System.out.println("not valid entry");
+                    searchAttraction();
+                }
+            }
+            System.out.println(theLink.TouristAttractionName);
+        }
+    }
+    public void updateName(String TouristAttractionName) {
+        System.out.print("New name");
+        String newAttractionName = input.nextLine();
+        theLinkedList.lastLink.TouristAttractionName = TouristAttractionName.replace(TouristAttractionName,newAttractionName); //taking in a string input and updating the new name with it
+    }
+
+    public void removeSelectedAttraction(String TouristAttractionName) {
+
+        TouristAttraction temp = firstLink, prev = null;
+
+
+// method to check whether the list is empty and change the links accordingly e.g. firstlink would become temp.next etc
+        while (!temp.TouristAttractionName.equals(TouristAttractionName)) { // prev refers to the link before the one being checked in the chain
+            prev = temp;
+            temp = temp.next;
+        }
+
+        if (temp != null) {
+            if (prev == null)
+                firstLink  = temp.next;
+
+            else
+                prev.next = temp.next;
+
+        }
+        if(temp ==firstLink){
+            firstLink= firstLink.next;  // conditions for if the attraction is the first entry or last
+
+        }
+        if (temp == lastLink){
+            lastLink = lastLink.previous;
+
+        }
+
+    }
+    public void update() { // update method to search through the list ot see if its in it
+        System.out.println("Name to update");
+        String TouristAttractionName = input.nextLine();
+        updateName(TouristAttractionName);
+    }
+    public static void saveFile( List<TouristAttraction> T1, String filepath){ // csv file method
+        try{
+            FileWriter fw = new FileWriter(filepath,true); // file writer to create the file
+            BufferedWriter bw = new BufferedWriter(fw); // to print strings similar to the bufferedimage we used in ca2 for sheep counter
+            PrintWriter pw = new PrintWriter(bw); // can print string ints and other primitives as text rather than binary values
+            for(TouristAttraction T : T1 ) { // for loop to add all the data
+                pw.println("TouristAttractionName: "+T.TouristAttractionName + "," +"TouristAttraction Description: "+ T.TouristAttractionDescription + "," +"TouristAttraction Opening times: " + T.OpeningTimes + "," +"Total cost"+ T.TotalCost);
+
+            }
+            pw.flush(); // flushes the file with the adt data
+            pw.close(); // it closes the pw stream
+
+        }
+        catch( Exception E){
+            JOptionPane.showMessageDialog(null,"Record Not Saved");
+        }
+
+    }
+
+
+
+
+    public void removeAttraction() { //method to delete a property
+        System.out.println("Enter Attraction Name to delete");
+        String TouristAttractionName = input.nextLine();
+
+
+        theLinkedList.removeSelectedAttraction(TouristAttractionName);
+
+    }
+    public void display() { // display method to print the linked list out by connecting links and cycles through it until all the list has been printed
+        TouristAttraction theConnectingLink = firstLink;
+        while (theConnectingLink != null) {
+            theConnectingLink.display();
+            // System.out.println("Next Link " + theConnectingLink.next);
+            theConnectingLink = theConnectingLink.next;
+            System.out.println();
+        }
+    }
+}
