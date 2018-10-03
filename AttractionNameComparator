@@ -1,0 +1,8 @@
+import java.util.Comparator;
+
+public class AttractionNameComparator  implements Comparator<TouristAttraction> {
+    public int compare(TouristAttraction d1, TouristAttraction d2) {
+        return d1.getTouristAttractionName().compareTo(d2.getTouristAttractionName());
+        // creating a name comparator that checks the two tourist attraction objects and see which one is first in the alphabet by comparing the two
+    }
+}

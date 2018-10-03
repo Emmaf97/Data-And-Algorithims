@@ -1,0 +1,67 @@
+import java.util.List;
+
+public class TouristAttraction implements Comparable<TouristAttraction> {
+
+    public String TouristAttractionName; // these variables are used for the data being put into the linked list as tourist attraction
+    public String TouristAttractionDescription;
+    public String OpeningTimes;
+    public int TotalCost;
+
+    public TouristAttraction next;  // this is a link to the next object in the list
+    public TouristAttraction previous; // this is a link to the previous object in the list
+
+    // this is the TouristAttraction  constructor for the data to be passed in as Strings and integers
+    public TouristAttraction(String touristAttractionName, String touristAttractionDescription, String openingTimes, int totalCost) {
+        this.TouristAttractionName = touristAttractionName;
+        this.TouristAttractionDescription = touristAttractionDescription;
+        this.OpeningTimes = openingTimes;
+        this.TotalCost = totalCost;
+    }
+
+    public TouristAttraction() {
+
+    }
+
+
+    // this is a method that will display the TouristAttraction more effiecent than writing system.println for each output
+    public void display() {
+        System.out.println("TouristAttractionName" + ":" +TouristAttractionName + ":" +"Description: "+ TouristAttractionDescription + " OpeningTimes:" + OpeningTimes + "  TotalCost:  "+TotalCost);
+    }
+    // returns the TouristAttraction data
+    public String toString() {
+        return TouristAttractionName+ TouristAttractionDescription +TotalCost+ OpeningTimes;
+
+
+    }
+    public String getTouristAttractionName(){
+        return TouristAttractionName;
+    }
+    public String getTouristAttractionDescription(){return TouristAttractionDescription; }
+    public String getOpeningTimes(){return OpeningTimes;}
+    public int getTotalCost(){return TotalCost;}
+
+
+
+    public void setTotalCost(int totalCost) {
+        this.TotalCost = totalCost;
+    }
+    public void setOpeningTimes(String openingTimes) {
+        this.OpeningTimes = openingTimes;
+    }
+    public void setTouristAttractionDescription(String touristAttractionDescription) {
+        this.TouristAttractionDescription= touristAttractionDescription;
+    }
+    public void setTouristAttractionName(String touristAttractionName) {
+        this.TouristAttractionName = touristAttractionName;
+    }
+
+    public int compareTo(TouristAttraction d){
+        return this.getTotalCost()-d.getTotalCost();
+    }
+
+
+
+
+
+
+}
